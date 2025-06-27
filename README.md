@@ -3,6 +3,7 @@
 ## About
 
 All the pipeline tools are packaged into an OCI container image.
+This image is available at [`ghcr.io/biomicrocenter/streamlinecnv`](https://github.com/orgs/BioMicroCenter/packages/container/package/streamlinecnv).
 The `containers/` directory contains the Dockerfile used to create the image, alongside a folder containing the scripts which are included in the image.
 
 To use this pipeline, you'll need to install both Singularity and Nextflow.
