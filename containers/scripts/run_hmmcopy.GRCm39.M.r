@@ -6,7 +6,6 @@ gfile <- "/data/GRCm39_gc_500k.wig"
 mfile <- "/data/GRCm39_map_40mer_500k.wig"
 x1_untrimmed_reads <- wigsToRangedData(rfile,gfile,mfile)
 corrected <- correctReadcount(x1_untrimmed_reads)
-#corrected <- corrected[!is.na(corrected$copy) & is.finite(corrected$copy)]
 corrected$chr <- as.factor(corrected$chr)
 segments <- HMMsegment(corrected)
 
@@ -30,8 +29,6 @@ chr_order_present <- chr_order[chr_order %in% data$chr]
 data <- data[chr_order_present]
 
 # Reproducing internals of plotSegment for maximum customization
-#cols <- stateCols() # Predefined colours
-#cols= c("#74C476","#238B45","#0909bc", "#A50F15","#DE2D26","#FB6A4A")
 
 cols <- c("#32CD32", "#0909bc","#0909bc", "#0909bc", "#FF0000","#FF0000");
 segs <- merge(segments$segs, lengths[, c(1, 3)], all.x = TRUE)
@@ -54,13 +51,13 @@ for (i in 1:nrow(segs)) {
         if (segs$median[i] < 0.195 && segs$median[i] > -0.13) {
             data$state[k] <- 3
         } else if (segs$median[i] >= 0.195) {
-            data$state[k] <- 5  # red
+            data$state[k] <- 5
         } else {
-            data$state[k] <- 1  # green
+            data$state[k] <- 1
         }
 
         if (data$chr[k] == "chrY" || data$chr[k]=="chrX") {
-            data$state[k] <- 1  # force chrY to green
+            data$state[k] <- 1
         }
     }
 }
@@ -74,9 +71,5 @@ text(lengths$offset, 1, labels = gsub("chr", "", lengths$chr), adj = -0.1, cex=2
 
 
 # Inserting the segmentation lines if desired...
-segments(x0 = segs$start + segs$offset, y0 = segs$median, x1 = segs$end + segs$offset, col = "#0909bc", lwd = 3) # Note, segments is a function... not the output, unfortunately naming...
+segments(x0 = segs$start + segs$offset, y0 = segs$median, x1 = segs$end + segs$offset, col = "#0909bc", lwd = 3) # Note, segments is a function... not the output
 dev.off();
-
-
-#rangedDataToSeg(corrected, "out.seg", column = "copy",verbose = TRUE)
-#write.table(segments$segs, file="segments.txt", sep="\t")

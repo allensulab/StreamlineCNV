@@ -11,7 +11,6 @@ corrected$chr <- as.factor(corrected$chr)
 segments <- HMMsegment(corrected)
 
 # Find appropriate offset for each chr to plot all points on same cartesian plane
-#chromosomes <- levels(corrected$chr)
 lengths <- corrected[, .(chrlen = max(end)), by = chr]
 lengths <- lengths[c(1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 11, 13, 14, 15, 16, 17, 18, 19, 21, 20, 24, 23, 8, 22), ] # Just sorting
 lengths$offset <- c(0, cumsum(as.numeric(lengths$chrlen))[-nrow(lengths)])
@@ -32,8 +31,6 @@ chr_order_present <- chr_order[chr_order %in% data$chr]
 data <- data[chr_order_present]
 
 # Reproducing internals of plotSegment for maximum customization
-#cols <- stateCols() # Predefined colours
-#cols= c("#74C476","#238B45","#0909bc", "#A50F15","#DE2D26","#FB6A4A")
 
 cols <- c("#32CD32", "#0909bc","#0909bc", "#0909bc", "#FF0000","#FF0000");
 segs <- merge(segments$segs, lengths[, c(1, 3)], all.x = TRUE)
@@ -54,13 +51,13 @@ for (i in 1:nrow(segs)) {
         if (segs$median[i] < 0.195 && segs$median[i] > -0.13) {
             data$state[k] <- 3
         } else if (segs$median[i] >= 0.195) {
-            data$state[k] <- 5  # red
+            data$state[k] <- 5
         } else {
-            data$state[k] <- 1  # green
+            data$state[k] <- 1
         }
 
         if (data$chr[k] == "chrY") {
-            data$state[k] <- 1  # force chrY to green
+            data$state[k] <- 1
         }
     }
 }
@@ -74,9 +71,6 @@ text(lengths$offset, 1, labels = gsub("chr", "", lengths$chr), adj = -0.1, cex=2
 
 
 # Inserting the segmentation lines if desired...
-segments(x0 = segs$start + segs$offset, y0 = segs$median, x1 = segs$end + segs$offset, col = "#0909bc", lwd = 3) # Note, segments is a function... not the output, unfortunately naming...
+segments(x0 = segs$start + segs$offset, y0 = segs$median, x1 = segs$end + segs$offset, col = "#0909bc", lwd = 3) # Note, segments is a function... not the output
 dev.off();
 
-
-#rangedDataToSeg(corrected, "out.seg", column = "copy",verbose = TRUE)
-#write.table(segments$segs, file="segments.txt", sep="\t")

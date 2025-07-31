@@ -6,12 +6,6 @@ import shutil
 import statistics
 from pathlib import Path
 
-def check_programs():
-    programs = ['R', 'samtools', 'dirname', 'readCounter']
-    for program in programs:
-        if shutil.which(program) is None:
-            raise RuntimeError(f"CHECK: {program} not found")
-
 def average(values):
     return sum(values) / len(values)
 
@@ -35,7 +29,7 @@ def get_vs(inputfile):
 
     averages = []
     for chr_, vals in values.items():
-        if chr_ in ["chrX", "chrY"]:
+        if chr_ in ["X", "Y"]:
             continue
 
         sds = []
@@ -54,12 +48,10 @@ def main():
     parser.add_argument("input_bam_folder", help="Folder containing BAM files")
     parser.add_argument("ref_genome", help="Reference genome (e.g., GRCh38)")
     parser.add_argument("--downsample", type=int, default=0, help="Downsample to this number of reads (default: 0)")
-    parser.add_argument("--dosomeclean", action="store_true", help="Perform additional cleaning (remove chrM, sorting)")
+    parser.add_argument("--dosomeclean", action="store_true", help="Perform additional cleaning (remove M, sorting)")
     parser.add_argument("--evalue", type=float, default=0.9999999, help="E-value for HMMcopy (default: 0.9999999)")
     parser.add_argument("--keeptmp", action="store_true", help="Keep temporary files for debugging")
     args = parser.parse_args()
-
-    check_programs()
 
     script_dir = Path(__file__).parent
     input_folder = Path(args.input_bam_folder)

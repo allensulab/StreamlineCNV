@@ -29,8 +29,6 @@ lengths <- lengths[c(1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 11, 13, 14, 15, 16, 17, 18,
 lengths$offset <- c(0, cumsum(as.numeric(lengths$chrlen))[-nrow(lengths)])
 
 corrected$state <- segments$state
-#corrected$start <- start(corrected)
-#corrected$end <- end(corrected)
 
 
 # Merging offset information back into original corrected data frame
@@ -44,15 +42,13 @@ range <- quantile(data$copy, na.rm = TRUE, prob = c(0.01, 0.99)) # Optional rang
 plot(x = data$start + data$offset, y = data$copy,xaxt='n', xlab="Chromosome", ylab="CopyNumber", col = cols[data$state], pch = 20, ylim = c(-1,1) )
 title(xlab="", mgp=c(0.5,1,0) )
 abline(v = lengths$offset) # Separate chromosomes
-#text(lengths$offset, 1, labels = lengths$chr, adj = -0.1) # Label chromosomes
 text(lengths$offset, 1, labels = gsub("chr", "", lengths$chr), adj = -0.2) # Label chromosomes
 
 # Inserting the segmentation lines if desired...
 segs <- merge(segments$segs, lengths[, c(1, 3)], all.x = TRUE)
-segments(x0 = segs$start + segs$offset, y0 = segs$median, x1 = segs$end + segs$offset, col = "green", lwd = 3) # Note, segments is a function... not the output, unfortunately naming...
+segments(x0 = segs$start + segs$offset, y0 = segs$median, x1 = segs$end + segs$offset, col = "green", lwd = 3) # Note, segments is a function... not the output
 dev.off();
 
-#rangedDataToSeg(corrected, "out.seg", column = "copy",verbose = TRUE)
 write.table(segments$segs, file="segments.txt", sep="\t")
-n=matrix(c(as.character(corrected$space),corrected$copy),ncol=2)
+n=matrix(c(as.character(corrected$chr),corrected$copy),ncol=2)
 write.table(n, file="data.txt", sep="\t",row.names=FALSE, col.names=FALSE)

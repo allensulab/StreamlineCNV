@@ -7,14 +7,12 @@ infile = sys.argv[1]
 infile1 = sys.argv[2]
 outfile = sys.argv[3]
 
-# Read the second input file into a dictionary
 gene = {}
 with open(infile1, 'r') as f:
     for line in f:
         line = line.strip()
         gene[line] = line
 
-# Process the first input file
 with open(infile, 'r') as fin, open(outfile, 'w') as fout:
     n = 0
     for current_line in fin:
