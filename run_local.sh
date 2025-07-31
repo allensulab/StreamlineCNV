@@ -1,7 +1,6 @@
 #!/bin/bash
 
-REF_FILES_DIR="$PWD/data/ref_files"
-FASTQ_DATA="$PWD/data/fastq_files"
+DATA_DIR="$PWD/data/"
 OUTDIR="$PWD/results"
 GENE_LIST="$PWD/data/geneListExample"
 CLUSTERING_LABEL="$PWD/data/ClusteringLabel"
@@ -10,8 +9,8 @@ SAMPLE_INFO="$PWD/data/SampleInfo"
 nextflow clean -f
 nextflow run StreamlineCNV.nf \
             -profile local,singularity \
-            --ref_files_dir $REF_FILES_DIR \
-            --fastq "$FASTQ_DATA/*fq" \
+            --data_dir $DATA_DIR \
+            --fastq "$DATA_DIR/*fq" \
             --species 'Homo_sapiens' \
             --assembly 'GRCh38' \
             --outdir $OUTDIR \
