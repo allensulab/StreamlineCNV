@@ -15,6 +15,19 @@ Please contact your system administrators for more information.
 
 Once you've installed Singularity and Nextflow, clone this repository to your system: `git clone https://github.com/BioMicroCenter/StreamlineCNV && cd StreamlineCNV`.
 
+This repository, including the OCI container image, is private. Thus, for Singularity to pull the image you'll need to 1) have access to this repository, 2) create a personal access token for you account, and 3) configure Singularity to use your personal access token.
+
+To create a personal access token, follow the [official GitHub account documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
+
+Then, add the following to whichever script you use (`run_local.sh`, `run_slurm.sh`, `run_singularity_no_nextflow.sh`):
+
+```
+export SINGULARITY_DOCKER_USERNAME="YOUR GITHUB USERNAME"
+export SINGULARITY_DOCKER_PASSWORD="YOUR PERSONAL ACCESS TOKEN"  
+```
+
+Now, Singularity will use your GitHub credentials when attempting to pull the private StreamlineCNV OCI container image.
+
 ## Environment variables
 
 Before you run the pipeline, you need to set the following environment variables to tell the pipeline where your data are located. 
