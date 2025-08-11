@@ -1,7 +1,7 @@
 FROM nfcore/tools:latest
 LABEL description="StreamlineCNV"
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y build-essential cmake r-base libhts3 libhts-dev fastqc samtools bcftools gnuplot autoconf automake libtool libgtextutils0v5 libgtextutils-dev libgd-perl libperlio-gzip-perl bwa
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y build-essential cmake r-base libhts3 libhts-dev fastqc samtools bcftools gnuplot autoconf automake libtool libgtextutils0v5 libgtextutils-dev libgd-perl libperlio-gzip-perl bwa python3-seaborn python3-sklearn python3-sklearn-lib python-sklearn-doc
 
 RUN mkdir -p /tmp && cd /tmp &&\
     git clone https://github.com/shahcompbio/hmmcopy_utils &&\ 
