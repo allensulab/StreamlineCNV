@@ -3,7 +3,7 @@
 ## About
 
 All the pipeline tools are packaged into an OCI container image.
-This image is available at [`ghcr.io/biomicrocenter/streamlinecnv`](https://github.com/orgs/BioMicroCenter/packages/container/package/streamlinecnv).
+This image is available at [`ghcr.io/biomicrocenter/streamlinecnv:release`](https://github.com/orgs/BioMicroCenter/packages/container/package/streamlinecnv).
 The `containers/` directory contains the Dockerfile used to create the image, alongside a folder containing the scripts which are included in the image.
 
 To use this pipeline, you'll need to install both Singularity and Nextflow.
@@ -22,11 +22,11 @@ You can do this in the provided example shell scripts.
 
 | Variable        | Description                                                                                                           |
 | :-------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `REF_FILES_DIR` | The folder where your reference files are located. This folder will be mounted at ‘/data’ inside the Singularity container. Defaults to ‘data/ref_files’. |
-| `FASTQ_DATA`    | The folder where your fastq files are located. Defaults to `data/fastq_files`.                                                                         |
+| `DATA_FILES_DIR` | The folder where your reference and data files are located. This folder will be mounted at ‘/data’ inside the Singularity container. Defaults to ‘data/’. |
 | `OUTDIR`        | The folder where you'd like results to be output. Defaults to `results`.                                                                     |
 | `GENE_LIST`     | The gene list file. Defaults to `data/GeneListExample`.                                                                                  |
 | `SAMPLE_INFO`   | The sample info file. Defaults to `data/SampleInfo`.                                                                                    |
+| `CLUSTERING_LABEL`   | The clustering label file. Defaults to `data/ClusteringLabel`.                                                                                    |
 | `QUEUE`         | (Optional) When using the `slurm` profile, the name of the Slurm queue you'll submit the job to. Defaults to `normal` |
 | `EXTRA_MOUNT`   | (Optional) Provide an extra mount point to the Singularity container. Defaults to `''`                                |
 

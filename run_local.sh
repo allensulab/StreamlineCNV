@@ -1,12 +1,11 @@
 #!/bin/bash
 
 DATA_DIR="$PWD/data/"
-OUTDIR="$PWD/results"
-GENE_LIST="$PWD/data/geneListExample"
+OUTDIR="results"
+GENE_LIST="$PWD/data/GeneListExample"
 CLUSTERING_LABEL="$PWD/data/ClusteringLabel"
 SAMPLE_INFO="$PWD/data/SampleInfo"
 
-nextflow clean -f
 nextflow run StreamlineCNV.nf \
             -profile local,singularity \
             --data_dir $DATA_DIR \

@@ -7,7 +7,7 @@
 #SBATCH -n 4
 
 DATA_DIR="$PWD/data/"
-OUTDIR="$PWD/results"
+OUTDIR="results"
 GENE_LIST="$PWD/data/GeneListExample"
 SAMPLE_INFO="$PWD/data/SampleInfo"
 CLUSTERING_LABEL="$PWD/data/ClusteringLabel"
@@ -21,7 +21,6 @@ EXTRA_MOUNT="/net:/net"
 # module load singularity
 # module load nextflow
 
-nextflow clean -f
 nextflow run StreamlineCNV.nf \
             -profile slurm,singularity \
             --data_dir $DATA_DIR \

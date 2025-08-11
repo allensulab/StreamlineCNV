@@ -1,13 +1,12 @@
 #!/bin/bash
 
 DATA_DIR="$PWD/data"
-OUTDIR="$PWD/results"
+OUTDIR="results"
 GENE_LIST="$PWD/data/GeneListExample"
 CLUSTERING_LABEL="$PWD/data/ClusteringLabel"
 SAMPLE_INFO="$PWD/data/SampleInfo"
 
-singularity exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/streamlinecnv:main nextflow clean -f
-singularity exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/streamlinecnv:main nextflow run \
+singularity exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/streamlinecnv:release nextflow run \
                                                                                                 StreamlineCNV.nf \
                                                                                                 -profile singularity_no_nextflow \
                                                                                                 --data_dir $DATA_DIR \
