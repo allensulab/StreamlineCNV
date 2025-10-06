@@ -10,6 +10,9 @@ params.clusteringLabel = ''  // GeneList file path for gene density plotting
 params.geneList = ''  // GeneList file path for gene density plotting
 params.recolor = false
 params.sampleInfo = ''  // SampleInfo file path for recolor
+params.clustering_memory = '16.GB'
+params.clustering_cpus = 4
+params.clustering_time = '10.h'
 
 fastq_ch = Channel.fromPath(params.fastq, type: 'file')
 species_ch = Channel.fromPath(params.species)
@@ -130,6 +133,28 @@ process HMMCOPY {
     tail -n2 stats.txt > \${id}_stat.txt
     rm stats.txt
     mv *tmp/input.wig ./\${id}.wig
+    """
+}
+
+process CNVSCORE {
+    publishDir "${params.outdir}", mode: 'copy', pattern: '*.{txt}'
+
+    input:
+    path segment_files
+
+
+    output:
+    path "Merge_seg_CNVscore.txt", emit: merged_segments
+
+    script:
+    // Prepare bash-safe list of file names for debug message
+
+    """
+    head -n1 ${baseDir}/${params.outdir}/HMMCOPY_results/*_cnvScore.tsv |sort -u |tail -n1> header
+    echo "Reading from: ${baseDir}/${params.outdir}/HMMCOPY_results/"
+    cat ${baseDir}/${params.outdir}/HMMCOPY_results/*_cnvScore.tsv | grep -v sampleID > int
+    cat header int >Merge_seg_CNVscore.txt
+
     """
 }
 
@@ -279,6 +304,8 @@ workflow {
     mappingresults_ch = BWA(bwatmp_ch)
     hmmtmp_ch = mappingresults_ch.mappingdir.flatten().combine(assembly_ch)
     hmmcopyresults_ch = HMMCOPY(hmmtmp_ch)
+    cnvscore_input_ch = hmmcopyresults_ch.tsv_results.collect()
+    cnvscore_ch = CNVSCORE(cnvscore_input_ch)
 
 
     if (params.clustering) {

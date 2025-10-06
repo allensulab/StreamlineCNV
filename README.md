@@ -35,11 +35,11 @@ You can do this in the provided example shell scripts.
 
 | Variable        | Description                                                                                                           |
 | :-------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `DATA_FILES_DIR` | The folder where your reference and data files are located. This folder will be mounted at ‘/data’ inside the Singularity container. Defaults to ‘data/’. |
+| `DATA_DIR` | The folder where your reference and data files are located. This folder will be mounted at ‘/data’ inside the Singularity container. Defaults to ‘data/’. |
 | `OUTDIR`        | The folder where you'd like results to be output. Defaults to `results`.                                                                     |
 | `GENE_LIST`     | The gene list file. Defaults to `data/GeneListExample`.                                                                                  |
 | `SAMPLE_INFO`   | The sample info file. Defaults to `data/SampleInfo`.                                                                                    |
-| `CLUSTERING_LABEL`   | The clustering label file. Defaults to `data/ClusteringLabel`.                                                                                    |
+| `CLUSTERING_LABEL`   | The file containing sample IDs to enter clustering analyses, as well as their labels such as cell types. Defaults to `data/ClusteringLabel`.                                                                                    |
 | `QUEUE`         | (Optional) When using the `slurm` profile, the name of the Slurm queue you'll submit the job to. Defaults to `normal` |
 | `EXTRA_MOUNT`   | (Optional) Provide an extra mount point to the Singularity container. Defaults to `''`                                |
 
