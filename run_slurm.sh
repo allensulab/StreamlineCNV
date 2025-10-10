@@ -7,24 +7,26 @@
 #SBATCH -n 4
 
 DATA_DIR="$PWD/data/"
+FASTQ_DATA="$PWD/data/fastq_files"
 OUTDIR="results"
 GENE_LIST="$PWD/data/GeneListExample"
 SAMPLE_INFO="$PWD/data/SampleInfo"
 CLUSTERING_LABEL="$PWD/data/ClusteringLabel"
 QUEUE="normal"
+CONTAINER_PROFILE="singularity"
 EXTRA_MOUNT="/net:/net"
 
 # Make sure to include any steps necessary
-# to load nextflow and singularity into
-# your HPC environment. For example:
+# to load nextflow and your containerization software
+# into your HPC environment. For example:
 # 
 # module load singularity
 # module load nextflow
 
 nextflow run StreamlineCNV.nf \
-            -profile slurm,singularity \
+            -profile slurm,$CONTAINER_PROFILE \
             --data_dir $DATA_DIR \
-            --fastq "$DATA_DIR/*fq" \
+            --fastq "$FASTQ_DATA/*.fastq" \
             --species 'Homo_sapiens' \
             --assembly 'GRCh38' \
             --outdir $OUTDIR \

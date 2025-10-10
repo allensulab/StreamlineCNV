@@ -1,16 +1,20 @@
 #!/bin/bash
 
 DATA_DIR="$PWD/data"
+FASTQ_DATA="$PWD/data/fastq_files"
 OUTDIR="results"
 GENE_LIST="$PWD/data/GeneListExample"
 CLUSTERING_LABEL="$PWD/data/ClusteringLabel"
 SAMPLE_INFO="$PWD/data/SampleInfo"
+CONTAINER_PROFILE="singularity"
 
-singularity exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/streamlinecnv:release nextflow run \
+CONTAINER_COMMAND=$(which $CONTAINER_PROFILE)
+
+$CONTAINER_COMMAND exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/streamlinecnv:release nextflow run \
                                                                                                 StreamlineCNV.nf \
-                                                                                                -profile singularity_no_nextflow \
+                                                                                                -profile container_no_nextflow \
                                                                                                 --data_dir $DATA_DIR \
-                                                                                                --fastq "$DATA_DIR/*fq" \
+                                                                                                --fastq "$FASTQ_DATA/*.fastq" \
                                                                                                 --species 'Homo_sapiens' \
                                                                                                 --assembly 'GRCh38' \
                                                                                                 --outdir $OUTDIR \
