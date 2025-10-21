@@ -126,7 +126,7 @@ process HMMCOPY {
     id=\$(ls *pdf | cut -f1 -d .)
     python3.11 /opt/scripts/segments_anno.py merge.segments.txt /data/${assembly} \${id}_merge.segments.tsv
     python3.11 /opt/scripts/aneuploidySum.py \${id}_merge.segments.tsv \${id}.int \${id}
-    python3.11 /opt/scripts/cnvScore.py /data/GRCh38_chrsize \${id}.int \${id}_cnvScore.tsv
+    python3.11 /opt/scripts/cnvScore.py /data/${assembly}_chrsize \${id}.int \${id}_cnvScore.tsv
     tail -n2 stats.txt > \${id}_stat.txt
     rm stats.txt
     mv *tmp/input.wig ./\${id}.wig
