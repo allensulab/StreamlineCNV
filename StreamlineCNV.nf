@@ -316,7 +316,7 @@ workflow {
     if (params.clustering) {
         clustering_Label_ch = Channel.fromPath(params.clusteringLabel)
         segment_files_ch = hmmcopyresults_ch.tsv_results.collect()
-        CLUSTERING(clustering_Label_ch, segment_files_ch)
+        CLUSTERING(clustering_Label_ch, segment_files_ch, assembly_ch)
     }
 
 
