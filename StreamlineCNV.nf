@@ -10,6 +10,11 @@ params.clusteringLabel = ''  // GeneList file path for gene density plotting
 params.geneList = ''  // GeneList file path for gene density plotting
 params.recolor = false
 params.sampleInfo = ''  // SampleInfo file path for recolor
+params.clustering_memory = '16.GB'
+params.no_sampleLabel = false
+params.clustering_cpus = 4
+params.clustering_time = '10.h'
+params.dropChr = '' // space-separated list of chromosomes to drop, e.g. 'X Y MT'
 
 fastq_ch = Channel.fromPath(params.fastq, type: 'file')
 species_ch = Channel.fromPath(params.species)
@@ -162,7 +167,7 @@ process CLUSTERING {
     input:
     path label_file
     path segment_files
-
+    path assembly
 
     output:
     path "seg.txt", emit: merged_segments
@@ -171,7 +176,9 @@ process CLUSTERING {
     path "clustering.pdf", emit: clusteringpdf, optional: true
 
     script:
-    // Prepare bash-safe list of file names for debug message
+    // Optional flag for Python
+    def noSampleLabelOpt = params.no_sampleLabel ? '--no-sampleLabel True' : ''
+    def dropChrOpt = params.dropChr ? "--drop-chr ${params.dropChr}" : ''
 
     """
     echo "=== DEBUG INFO ==="
@@ -185,6 +192,7 @@ process CLUSTERING {
     cat ${baseDir}/${params.outdir}/HMMCOPY_results/*_merge.segments.tsv | grep -v SampleName | sed -e 's/\\.sort.tmp\\/segments.txt//g' | sed 's/"//g' | cut -f1,3-6 > seg.txt
     python3.11 /opt/scripts/overlap.py seg.txt ${label_file} seg_anno
     python3.11 /opt/scripts/clustering.py clustering.pdf
+    python3.11 /opt/scripts/clustering.py -c /data/${assembly}_chrsize -i seg_anno -o clustering.pdf --bin-size 500000 --neutral 3 --anchor 0 --coords one_based_inclusive ${noSampleLabelOpt} ${dropChrOpt}
     echo "Final files created:"
     ls -la
     
