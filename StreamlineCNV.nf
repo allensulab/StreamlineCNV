@@ -127,11 +127,11 @@ process HMMCOPY {
     script:
     sample_id = bam.name.split('_')[0]
     """
-    python3.11 /opt/scripts/hmm_pipe.py --keeptmp $bam ${assembly} >stats.txt
+    /usr/bin/python3 /opt/scripts/hmm_pipe.py --keeptmp $bam ${assembly} >stats.txt
     id=\$(ls *pdf | cut -f1 -d .)
-    python3.11 /opt/scripts/segments_anno.py merge.segments.txt /data/${assembly} \${id}_merge.segments.tsv
-    python3.11 /opt/scripts/aneuploidySum.py \${id}_merge.segments.tsv \${id}.int \${id}
-    python3.11 /opt/scripts/cnvScore.py /data/${assembly}_chrsize \${id}.int \${id}_cnvScore.tsv
+    /usr/bin/python3 /opt/scripts/segments_anno.py merge.segments.txt /data/${assembly} \${id}_merge.segments.tsv
+    /usr/bin/python3 /opt/scripts/aneuploidySum.py \${id}_merge.segments.tsv \${id}.int \${id}
+    /usr/bin/python3 /opt/scripts/cnvScore.py /data/${assembly}_chrsize \${id}.int \${id}_cnvScore.tsv
     tail -n2 stats.txt > \${id}_stat.txt
     rm stats.txt
     mv *tmp/input.wig ./\${id}.wig
@@ -190,9 +190,9 @@ process CLUSTERING {
     echo "Reading from: ${baseDir}/${params.outdir}/HMMCOPY_results/"
     echo "Label file: ${label_file}"
     cat ${baseDir}/${params.outdir}/HMMCOPY_results/*_merge.segments.tsv | grep -v SampleName | sed -e 's/\\.sort.tmp\\/segments.txt//g' | sed 's/"//g' | cut -f1,3-6 > seg.txt
-    python3.11 /opt/scripts/overlap.py seg.txt ${label_file} seg_anno
-    python3.11 /opt/scripts/clustering.py clustering.pdf
-    python3.11 /opt/scripts/clustering.py -c /data/${assembly}_chrsize -i seg_anno -o clustering.pdf --bin-size 500000 --neutral 3 --anchor 0 --coords one_based_inclusive ${noSampleLabelOpt} ${dropChrOpt}
+    /usr/bin/python3 /opt/scripts/overlap.py seg.txt ${label_file} seg_anno
+    /usr/bin/python3 /opt/scripts/clustering.py clustering.pdf
+    /usr/bin/python3 /opt/scripts/clustering.py -c /data/${assembly}_chrsize -i seg_anno -o clustering.pdf --bin-size 500000 --neutral 3 --anchor 0 --coords one_based_inclusive ${noSampleLabelOpt} ${dropChrOpt}
     echo "Final files created:"
     ls -la
     
@@ -215,7 +215,7 @@ process GeneDensityPlot {
 
     script:
     """
-    python3.11 /opt/scripts/RetrieveGeneLoc.py ${geneList} /data/${assembly}_chr Geneloc
+    /usr/bin/python3 /opt/scripts/RetrieveGeneLoc.py ${geneList} /data/${assembly}_chr Geneloc
     Rscript /opt/scripts/GeneDensityPlot.r ${assembly}
     """
 }
@@ -236,7 +236,7 @@ process RECOLOR_SAMPLES {
 
     """
     ls ${baseDir}/${params.outdir}/HMMCOPY_results/*wig >wig
-    python3.11 /opt/scripts/clean_sampleInfo.py ${sample_info_file} wig clean_sampleInfo.txt warning.txt
+    /usr/bin/python3 /opt/scripts/clean_sampleInfo.py ${sample_info_file} wig clean_sampleInfo.txt warning.txt
     if [ -f warning.txt ] && [ -s warning.txt ]; then
         echo "Warning file contains content - will be published"
     else
