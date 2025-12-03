@@ -51,8 +51,8 @@ def parse_args():
                    help="Coordinate convention for input segments (default: one_based_inclusive)")
     p.add_argument("--figsize", type=float, nargs=2, default=(18, 10),
                    help="Figure size width height (default: 18 10)")
-    p.add_argument("--palette", default="Set2",
-                   help="Seaborn palette for labels (default: Set2)")
+    p.add_argument("--palette", default="Set3",
+                   help="Seaborn palette for labels (default: Set3)")
     p.add_argument("--no-sampleLabel", type=lambda x: str(x).lower() == 'true', default=False,
                help="If True, disable Y-axis sample labeling (default: False)")
     return p.parse_args()
