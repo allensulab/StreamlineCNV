@@ -191,7 +191,6 @@ process CLUSTERING {
     echo "Label file: ${label_file}"
     cat ${baseDir}/${params.outdir}/HMMCOPY_results/*_merge.segments.tsv | grep -v SampleName | sed -e 's/\\.sort.tmp\\/segments.txt//g' | sed 's/"//g' | cut -f1,3-6 > seg.txt
     /usr/bin/python3 /opt/scripts/overlap.py seg.txt ${label_file} seg_anno
-    /usr/bin/python3 /opt/scripts/clustering.py clustering.pdf
     /usr/bin/python3 /opt/scripts/clustering.py -c /data/${assembly}_chrsize -i seg_anno -o clustering.pdf --bin-size 500000 --neutral 3 --anchor 0 --coords one_based_inclusive ${noSampleLabelOpt} ${dropChrOpt}
     echo "Final files created:"
     ls -la
