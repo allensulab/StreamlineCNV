@@ -2,7 +2,10 @@ name: Create and publish StreamlineCNV image
 
 on:
   push:
-    branches: ['release']
+    branches:
+      - 'dev'
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
