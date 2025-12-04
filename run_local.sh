@@ -15,10 +15,16 @@ nextflow run StreamlineCNV.nf \
             --species 'Homo_sapiens' \
             --assembly 'GRCh38' \
             --outdir $OUTDIR \
-            --plotGeneDensity true \
+            --plotGeneDensity false \
             --geneList $GENE_LIST \
             --recolor true \
             --sampleInfo $SAMPLE_INFO \
             --clustering true \
             --clusteringLabel $CLUSTERING_LABEL \
+            --clustering_memory '16.GB' \
+            --clustering_cpus 4 \
+            --clustering_time 20 \
+            --dropChr '' \
+            --tissue_color_palette 'Set3' \
+            --no_sampleLabel false \
             -resume

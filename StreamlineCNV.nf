@@ -10,10 +10,10 @@ params.clusteringLabel = ''  // GeneList file path for gene density plotting
 params.geneList = ''  // GeneList file path for gene density plotting
 params.recolor = false
 params.sampleInfo = ''  // SampleInfo file path for recolor
-params.clustering_memory = '16.GB'
 params.no_sampleLabel = false
+params.clustering_memory = '16.GB'
 params.clustering_cpus = 4
-params.clustering_time = '10.h'
+params.clustering_time = '20.h'
 params.tissue_color_palette = 'Set3'
 params.dropChr = '' // space-separated list of chromosomes to drop, e.g. 'X Y MT'
 
