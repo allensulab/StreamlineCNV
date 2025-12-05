@@ -26,7 +26,7 @@ $CONTAINER_COMMAND exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/str
                                                                                               --clusteringLabel $CLUSTERING_LABEL \
                                                                                               --clustering_memory '16.GB' \
                                                                                               --clustering_cpus 4 \
-                                                                                              --clustering_time 20 \
+                                                                                              --clustering_time '20.h' \
                                                                                               --dropChr '' \
                                                                                               --tissue_color_palette 'Set3' \
                                                                                               --no_sampleLabel false \
