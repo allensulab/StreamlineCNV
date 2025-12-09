@@ -11,7 +11,7 @@ segments <- HMMsegment(corrected)
 
 # Find appropriate offset for each chr to plot all points on same cartesian plane
 lengths <- corrected[, .(chrlen = max(end)), by = chr]
-lengths <- lengths[c(1,2,4,5,6,8,7,9,12,10,13,14,15,11,16,17,18,19,20,3,21), ] # Just sorting
+lengths <- lengths[c(1,2,4,5,6,7,8,10,12,9,13,15,14,11,16,17,18,20,21,3,19), ] # Just sorting
 lengths$offset <- c(0, cumsum(as.numeric(lengths$chrlen))[-nrow(lengths)])
 corrected$state <- segments$state
 
