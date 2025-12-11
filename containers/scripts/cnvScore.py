@@ -2,7 +2,7 @@ import argparse
 import csv
 
 # Set up command-line argument parsing
-parser = argparse.ArgumentParser(description="Aneuploidy portion calculation.")
+parser = argparse.ArgumentParser(description="Aneuploidy proportion calculation.")
 parser.add_argument("infile", help="merge.segments.tsv)")
 parser.add_argument("infile1", help="chr length file")
 parser.add_argument("outfile", help="Output TSV file path")
@@ -30,7 +30,7 @@ with open(args.infile, 'r') as f1, open(args.outfile, 'w', newline='') as out:
 
         if index in cnv:
             if n == 0:
-                writer.writerow(["sampleID"] + parts + [cnv[index], "CNVscore_aneuploidy_portion"])
+                writer.writerow(["sampleID"] + parts + [cnv[index], "CNVscore_aneuploidy_proportion"])
             else:
                 value = float(cnv[index])
                 denom = float(parts[1]) if len(parts) > 1 and parts[1].replace('.', '', 1).isdigit() else 1
