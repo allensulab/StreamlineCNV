@@ -20,7 +20,7 @@ $CONTAINER_COMMAND exec -B "$DATA_DIR:/data" docker://ghcr.io/biomicrocenter/str
                                                                                               --outdir $OUTDIR \
                                                                                               --plotGeneDensity false \
                                                                                               --geneList $GENE_LIST \
-                                                                                              --recolor true \
+                                                                                              --recolor false \
                                                                                               --sampleInfo $SAMPLE_INFO \
                                                                                               --clustering true \
                                                                                               --clusteringLabel $CLUSTERING_LABEL \
