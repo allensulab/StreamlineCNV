@@ -17,7 +17,7 @@ nextflow run StreamlineCNV.nf \
             --outdir $OUTDIR \
             --plotGeneDensity false \
             --geneList $GENE_LIST \
-            --recolor true \
+            --recolor false \
             --sampleInfo $SAMPLE_INFO \
             --clustering true \
             --clusteringLabel $CLUSTERING_LABEL \
