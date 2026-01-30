@@ -241,12 +241,13 @@ def main():
         .set_index("sample")
         .reindex(matrix.index)
     )
+    sample_labels["label_str"] = sample_labels["label"].astype(str)
     label_encoder = LabelEncoder()
-    sample_labels["label_code"] = label_encoder.fit_transform(sample_labels["label"].astype(str))
+    sample_labels["label_code"] = label_encoder.fit_transform(sample_labels["label_str"])
     unique_labels = list(label_encoder.classes_)
     palette = sns.color_palette(args.palette, len(unique_labels))
     label_to_color = dict(zip(unique_labels, palette))
-    row_colors = sample_labels["label"].map(label_to_color)
+    row_colors = sample_labels["label_str"].map(label_to_color)
     row_colors.index.name = None
     row_colors.name = None
 
