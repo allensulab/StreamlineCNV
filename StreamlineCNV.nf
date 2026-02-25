@@ -37,7 +37,7 @@ process FASTQC {
     sample_id = inputfq.baseName.replaceAll(/\.gz$|\.fq$|\.fastq$/, '')
     """
     mkdir fastqc_${sample_id}_logs
-    /home/software/fastqc/fastqc-0.11.5/fastqc -o fastqc_${sample_id}_logs -f fastq -q "$inputfq"
+    fastqc -o fastqc_${sample_id}_logs -f fastq -q "$inputfq"
     """
 }
 
@@ -87,7 +87,7 @@ process TRIM {
     script:
     sample_id = inputfq.name.split('\\.')[0]
     """
-    /home/software/fastxtoolkit/fastxtoolkit-0.0.13/bin/fastx_trimmer -Q33 -i "$inputfq" -o "${sample_id}_trimmed.fq" -l 40
+    fastx_trimmer -Q33 -i "$inputfq" -o "${sample_id}_trimmed.fq" -l 40
     """
 }
 
@@ -103,13 +103,13 @@ process BWA {
     script:
     sample_id = trimmedfq.name.split('_')[1]
     """
-    /home/software/bwa/bwa-0.7.12/bin/bwa aln -t 1 /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${species}.${assembly}.dna.primary_assembly.fa $trimmedfq >${sample_id}.sai
-    /home/software/bwa/bwa-0.7.12/bin/bwa samse /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${species}.${assembly}.dna.primary_assembly.fa ${sample_id}.sai $trimmedfq |grep -v MT|grep -v KI|grep -v GL|grep -v JH > ${sample_id}.sam
-    /home/software/samtools/samtools-1.5/bin/samtools view -uSh ${sample_id}.sam |/home/software/samtools/samtools-1.5/bin/samtools sort - -T ${sample_id}.sort.tmp -o ${sample_id}.sort.bam
-    /home/software/samtools/samtools-1.5/bin/samtools index ${sample_id}.sort.bam
-    denom=\$(tail -n1 /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${assembly}_chrsize | cut -f2)
+    bwa aln -t 1 /data/${species}.${assembly}.dna.primary_assembly.fa $trimmedfq >${sample_id}.sai
+    bwa samse /data/${species}.${assembly}.dna.primary_assembly.fa ${sample_id}.sai $trimmedfq |grep -v MT|grep -v KI|grep -v GL|grep -v JH > ${sample_id}.sam
+    samtools view -uSh ${sample_id}.sam | samtools sort - -T ${sample_id}.sort.tmp -o ${sample_id}.sort.bam
+    samtools index ${sample_id}.sort.bam
+    denom=\$(tail -n1 /data/${assembly}_chrsize | cut -f2)
     echo "Sequencing coverage after trimming:" >>${sample_id}_sequencing_coverage.report
-    /home/software/samtools/samtools-1.5/bin/samtools view -c -F 4 ${sample_id}.sort.bam | awk -v denom=\$denom '{printf "%.6f\\n", \$1 * 40 / denom}' >> ${sample_id}_sequencing_coverage.report
+    samtools view -c -F 4 ${sample_id}.sort.bam | awk -v denom=\$denom '{printf "%.6f\\n", \$1 * 40 / denom}' >> ${sample_id}_sequencing_coverage.report
     mkdir mapping_dir
     mv *bam* mapping_dir
     """
@@ -128,11 +128,11 @@ process HMMCOPY {
     script:
     sample_id = bam.name.split('_')[0]
     """
-    python3 /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/hmm_pipe.py --keeptmp $bam ${assembly} >stats.txt
+    /usr/bin/python3 /opt/scripts/hmm_pipe.py --keeptmp $bam ${assembly} >stats.txt
     id=\$(ls *pdf | cut -f1 -d .)
-    python3 /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/segments_anno.py merge.segments.txt /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${assembly} \${id}_merge.segments.tsv
-    python /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/aneuploidySum.py \${id}_merge.segments.tsv \${id}.int \${id}
-    python /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/cnvScore.py /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${assembly}_chrsize \${id}.int \${id}_cnvScore.tsv
+    /usr/bin/python3 /opt/scripts/segments_anno.py merge.segments.txt /data/${assembly} \${id}_merge.segments.tsv
+    /usr/bin/python3 /opt/scripts/aneuploidySum.py \${id}_merge.segments.tsv \${id}.int \${id}
+    /usr/bin/python3 /opt/scripts/cnvScore.py /data/${assembly}_chrsize \${id}.int \${id}_cnvScore.tsv
     tail -n2 stats.txt > \${id}_stat.txt
     rm stats.txt
     mv *tmp/input.wig ./\${id}.wig
@@ -160,7 +160,6 @@ process CNVSCORE {
 
     """
 }
-
 
 process CLUSTERING {
     cpus   params.clustering_cpus
@@ -196,8 +195,8 @@ process CLUSTERING {
     echo "Reading from: ${baseDir}/${params.outdir}/HMMCOPY_results/"
     echo "Label file: ${label_file}"
     cat ${baseDir}/${params.outdir}/HMMCOPY_results/*_merge.segments.tsv | grep -v SampleName | sed -e 's/\\.sort.tmp\\/segments.txt//g' | sed 's/"//g' | cut -f1,3-6 > seg.txt
-    python /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/overlap.py seg.txt ${label_file} seg_anno
-    python /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/clustering.py -c /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${assembly}_chrsize -i seg_anno -o clustering.pdf --bin-size 500000 --neutral 3 --anchor 0 --coords one_based_inclusive ${noSampleLabelOpt} ${dropChrOpt} ${tissuePaletteOpt}
+    /usr/bin/python3 /opt/scripts/overlap.py seg.txt ${label_file} seg_anno
+    /usr/bin/python3 /opt/scripts/clustering.py -c /data/${assembly}_chrsize -i seg_anno -o clustering.pdf --bin-size 500000 --neutral 3 --anchor 0 --coords one_based_inclusive ${noSampleLabelOpt} ${dropChrOpt} ${tissuePaletteOpt}
     echo "Final files created:"
     ls -la
     
@@ -220,10 +219,8 @@ process GeneDensityPlot {
 
     script:
     """
-    module load python3/3.6.4
-    python3 /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/RetrieveGeneLoc.py ${geneList} /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/${assembly}_chr Geneloc
-    module load r/4.2.0
-    Rscript /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/GeneDensityPlot.r ${assembly}
+    /usr/bin/python3 /opt/scripts/RetrieveGeneLoc.py ${geneList} /data/${assembly}_chr Geneloc
+    Rscript /opt/scripts/GeneDensityPlot.r ${assembly}
     """
 }
 
@@ -288,7 +285,7 @@ process RECOLOR {
     
     mkdir -p ${id}_recolor_output_dir
     cp ${hmmcopy_wig_file} ${id}_recolor_output_dir/input.wig
-    r_script="/net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/run_hmmcopy.\${assembly}.\${sex}.r"
+    r_script="/opt/scripts/run_hmmcopy.\${assembly}.\${sex}.r"
 
     cp "\$r_script" ${id}_recolor_output_dir/
     cd ${id}_recolor_output_dir
