@@ -240,7 +240,7 @@ process RECOLOR_SAMPLES {
 
     """
     ls ${baseDir}/${params.outdir}/HMMCOPY_results/*wig >wig
-    python /net/ostrom/data/bcc/projects/allen-Su/2025/SL-CNV/bin/clean_sampleInfo.py ${sample_info_file} wig clean_sampleInfo.txt warning.txt
+    /usr/bin/python3 /opt/scripts/clean_sampleInfo.py ${sample_info_file} wig clean_sampleInfo.txt warning.txt
     if [ -f warning.txt ] && [ -s warning.txt ]; then
         echo "Warning file contains content - will be published"
     else
